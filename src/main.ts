@@ -1,17 +1,6 @@
 import express from 'express';
 import {runDB} from './db';
-const firebase = require('firebase');
-
-const firebaseConfig = {
-    apiKey: "AIzaSyCcPOmv8P41guoB4BCAY3O4J71Jf4LdU-o",
-    authDomain: "handydandy-d3a69.firebaseapp.com",
-    projectId: "handydandy-d3a69",
-    storageBucket: "handydandy-d3a69.appspot.com",
-    messagingSenderId: "839025763923",
-    appId: "1:839025763923:web:05a13a4364b29c317288a6",
-    measurementId: "G-TN5ETZPK35"
-  };
-  
+const dotenv = require('dotenv')
 
 const PORT = 3000;
 const appExpress = express();
@@ -25,14 +14,14 @@ try{
 //models
 import User from './models/users';
 import Tradesman from './models/tradesman';
+import Case from './models/cases'
+import Offer from './models/offers'
+import Chat from './models/chat'
 
 //middleware
 appExpress.use(express.json())
 
 //routes
-
-
-//controllers
 
 
 

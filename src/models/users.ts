@@ -1,20 +1,19 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
 interface IUser extends Document {
-  email: string;
-  name: string;
-  address: string;
-  profileCompleted: boolean;
-  cases: mongoose.Types.ObjectId[];
-  stripeCustomerId: string;
+    firebaseUid: string;
+    email: string;
+    name: string;
+    address: string;
+    profileCompleted: boolean;
+    cases: mongoose.Types.ObjectId[];
 }
 
 const userSchema = new Schema({
-    userId: {
-        type: Schema.Types.ObjectId,
+    firebaseUid: { // Add this field
+        type: String,
         required: true,
         unique: true,
-        auto: true,
     },
     email: {
         type: String,
@@ -36,13 +35,9 @@ const userSchema = new Schema({
     cases: [
         { type: Schema.Types.ObjectId, ref: 'Case' }
     ],
-    stripeCustomerId: {
-        type: String,
-        required: false,
-    },
-
 });
 
 const User = mongoose.model<IUser>('User', userSchema);
-
 export default User;
+
+

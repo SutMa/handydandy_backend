@@ -24,20 +24,26 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importStar(require("mongoose"));
-const avialibleTrades = ['Electrician', 'Plumber', 'Carpeting', 'Pianting', 'Auto Mechanic', 'Roofing', 'Glass'];
+// Correcting the typo in variable name and "Painting"
+const availableTrades = ['Electrician', 'Plumber', 'Carpenting', 'Painting', 'Auto Mechanic', 'Roofing', 'Glass'];
 const serviceAreaSchema = new mongoose_1.default.Schema({
     placeId: { type: String, required: true },
     location: {
         lat: { type: Number, required: true },
         lng: { type: Number, required: true },
     },
-    radius: { type: Number }
+    radius: { type: Number, required: true } // Assuming radius is required
 });
 const tradesmanSchema = new mongoose_1.Schema({
+    firebaseUid: {
+        type: String,
+        required: true,
+        unique: true,
+    },
     email: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
     },
     name: {
         type: String,
@@ -46,44 +52,30 @@ const tradesmanSchema = new mongoose_1.Schema({
     tradeOccupation: {
         type: String,
         required: true,
-        enum: avialibleTrades
+        enum: availableTrades, // Using the corrected variable name
     },
     summary: {
         type: String,
         required: true,
-        maxlength: 150,
+        maxlength: 200,
     },
     averagePriceRange: {
         type: Number,
         required: true,
     },
-    serviceArea: {
-        type: serviceAreaSchema,
-        required: true,
-    },
+    serviceArea: serviceAreaSchema, // Direct use without type specification
     profileCompleted: {
         type: Boolean,
         default: false,
     },
-    casesInvolved: {
-        type: mongoose_1.default.Schema.Types.ObjectId,
-        ref: 'Case'
-    },
-    isPremiumMember: {
-        type: Boolean,
-        default: false,
-    },
-    verifiedStatus: {
-        type: Boolean,
-        default: false,
-    },
-    subscriptionEndDate: {
-        type: Date,
-    },
-    stripeAccountId: {
-        type: String,
-        required: false
-    }
+    casesInvolved: [{
+            type: mongoose_1.default.Schema.Types.ObjectId,
+            ref: 'Case',
+        }],
+    offersPlaced: [{
+            type: mongoose_1.default.Schema.Types.ObjectId,
+            ref: 'Offer',
+        }],
 });
 const Tradesman = mongoose_1.default.model('Tradesman', tradesmanSchema);
 exports.default = Tradesman;

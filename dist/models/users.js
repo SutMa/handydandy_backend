@@ -25,11 +25,10 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importStar(require("mongoose"));
 const userSchema = new mongoose_1.Schema({
-    userId: {
-        type: mongoose_1.Schema.Types.ObjectId,
+    firebaseUid: {
+        type: String,
         required: true,
         unique: true,
-        auto: true,
     },
     email: {
         type: String,
@@ -51,10 +50,6 @@ const userSchema = new mongoose_1.Schema({
     cases: [
         { type: mongoose_1.Schema.Types.ObjectId, ref: 'Case' }
     ],
-    stripeCustomerId: {
-        type: String,
-        required: false,
-    },
 });
 const User = mongoose_1.default.model('User', userSchema);
 exports.default = User;
