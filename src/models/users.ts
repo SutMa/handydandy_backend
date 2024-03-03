@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
 interface IUser extends Document {
-    firebaseUid: string;
+    password: string;
     email: string;
     name: string;
     address: string;
@@ -10,7 +10,7 @@ interface IUser extends Document {
 }
 
 const userSchema = new Schema({
-    firebaseUid: { // Add this field
+    password: { // Add this field
         type: String,
         required: true,
         unique: true,
@@ -35,6 +35,7 @@ const userSchema = new Schema({
     cases: [
         { type: Schema.Types.ObjectId, ref: 'Case' }
     ],
+    default: []
 });
 
 const User = mongoose.model<IUser>('User', userSchema);

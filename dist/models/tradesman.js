@@ -35,7 +35,7 @@ const serviceAreaSchema = new mongoose_1.default.Schema({
     radius: { type: Number, required: true } // Assuming radius is required
 });
 const tradesmanSchema = new mongoose_1.Schema({
-    firebaseUid: {
+    password: {
         type: String,
         required: true,
         unique: true,

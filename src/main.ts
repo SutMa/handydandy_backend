@@ -1,6 +1,6 @@
 import express from 'express';
 import {runDB} from './db';
-const dotenv = require('dotenv')
+
 
 const PORT = 3000;
 const appExpress = express();
@@ -17,15 +17,16 @@ import Tradesman from './models/tradesman';
 import Case from './models/cases'
 import Offer from './models/offers'
 import Chat from './models/chat'
+import bodyParser from 'body-parser';
 
-//middleware
-appExpress.use(express.json())
+// use middleware
+appExpress.use(express.json)
 
-//routes
+// import routes
+import userRegisterRoute from './routes/loginRoute'
 
-
-
-
+//use routes
+appExpress.use('/user', userRegisterRoute)
 
 appExpress.listen(PORT, () => {
     console.log("Server is running on port " + PORT);

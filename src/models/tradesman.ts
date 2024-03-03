@@ -4,7 +4,7 @@ import mongoose, { Schema, Document } from 'mongoose';
 const availableTrades = ['Electrician', 'Plumber', 'Carpenting', 'Painting', 'Auto Mechanic', 'Roofing', 'Glass'];
 
 interface ITradesmen extends Document {
-    firebaseUid: string; // Added field for Firebase UID
+    password: string; // Added field for Firebase UID
     email: string;
     name: string;
     tradeOccupation: string;
@@ -33,7 +33,7 @@ const serviceAreaSchema = new mongoose.Schema({
 });
 
 const tradesmanSchema = new Schema({
-    firebaseUid: { // Adding the Firebase UID field
+    password: { // Adding the Firebase UID field
         type: String,
         required: true,
         unique: true,
