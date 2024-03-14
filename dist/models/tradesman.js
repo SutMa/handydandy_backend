@@ -26,14 +26,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importStar(require("mongoose"));
 // Correcting the typo in variable name and "Painting"
 const availableTrades = ['Electrician', 'Plumber', 'Carpenting', 'Painting', 'Auto Mechanic', 'Roofing', 'Glass'];
-const serviceAreaSchema = new mongoose_1.default.Schema({
-    placeId: { type: String, required: true },
-    location: {
-        lat: { type: Number, required: true },
-        lng: { type: Number, required: true },
-    },
-    radius: { type: Number, required: true } // Assuming radius is required
-});
 const tradesmanSchema = new mongoose_1.Schema({
     password: {
         type: String,
@@ -63,7 +55,10 @@ const tradesmanSchema = new mongoose_1.Schema({
         type: Number,
         required: true,
     },
-    serviceArea: serviceAreaSchema, // Direct use without type specification
+    serviceArea: [{
+            type: Number,
+            require: true
+        }],
     profileCompleted: {
         type: Boolean,
         default: false,

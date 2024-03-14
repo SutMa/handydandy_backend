@@ -30,7 +30,7 @@ const caseSchema = new Schema({
     },
     tradesmanId: {
         type: Schema.Types.ObjectId,
-        ref: 'Tradesman' // This can be initially null until a tradesman is assigned
+        ref: 'Tradesman' 
     }
 });
 

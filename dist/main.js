@@ -4,21 +4,23 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const db_1 = require("./db");
+const { MongoClient, ServerApiVersion } = require("mongodb");
+require('dotenv').config();
 const PORT = 3000;
-const appExpress = (0, express_1.default)();
-try {
-    (0, db_1.runDB)();
-}
-catch (e) {
-    console.log(e);
-}
+const app = (0, express_1.default)();
 // use middleware
-appExpress.use(express_1.default.json);
+app.use(express_1.default.json());
 // import routes
-const loginRoute_1 = __importDefault(require("./routes/loginRoute"));
+const userRoutes_1 = __importDefault(require("./routes/userRoutes"));
+const tradesmanRoutes_1 = __importDefault(require("./routes/tradesmanRoutes"));
 //use routes
-appExpress.use('/user', loginRoute_1.default);
-appExpress.listen(PORT, () => {
+app.use('/user', userRoutes_1.default);
+app.use('/tradesman', tradesmanRoutes_1.default);
+//database connection
+const mongoose = require('mongoose');
+require('dotenv').config();
+const uri = process.env.uri;
+mongoose.connect(uri);
+app.listen(PORT, () => {
     console.log("Server is running on port " + PORT);
 });

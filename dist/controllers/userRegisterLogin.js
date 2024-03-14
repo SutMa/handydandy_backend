@@ -7,11 +7,14 @@ exports.userRegister = void 0;
 const users_1 = __importDefault(require("../models/users"));
 const userRegister = async (req, res) => {
     try {
-        const newUser = await new users_1.default(req.body);
+        console.log("trying to register the user");
+        const newUser = await users_1.default.create(req.body);
         res.status(200).json({ message: 'User Registration Success' });
+        console.log("success");
     }
     catch (e) {
         res.status(400).json({ message: "User registration failed" });
+        console.log(e);
     }
 };
 exports.userRegister = userRegister;

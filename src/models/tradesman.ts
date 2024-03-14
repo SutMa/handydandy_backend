@@ -10,27 +10,13 @@ interface ITradesmen extends Document {
     tradeOccupation: string;
     summary: string;
     averagePriceRange: number;
-    serviceArea: { // Correcting the typo in property name
-        placeId: string;
-        location: {
-            lat: number;
-            lng: number;
-        };
-        radius: number;
-    };
+    serviceArea: number[];
     profileCompleted: boolean;
-    casesInvolved: mongoose.Schema.Types.ObjectId[]; // Correcting the typo in property name
+    casesInvolved: mongoose.Schema.Types.ObjectId[]; 
     offersPlaced: mongoose.Schema.Types.ObjectId[];
 }
 
-const serviceAreaSchema = new mongoose.Schema({
-    placeId: { type: String, required: true },
-    location: {
-      lat: { type: Number, required: true },
-      lng: { type: Number, required: true },
-    },
-    radius: { type: Number, required: true } // Assuming radius is required
-});
+
 
 const tradesmanSchema = new Schema({
     password: { // Adding the Firebase UID field
@@ -61,16 +47,19 @@ const tradesmanSchema = new Schema({
         type: Number,
         required: true,
     },
-    serviceArea: serviceAreaSchema, // Direct use without type specification
+    serviceArea: [{
+            type: Number,
+            require:true
+    }],
     profileCompleted: {
         type: Boolean,
         default: false,
     },
-    casesInvolved: [{ // Correctly defining as an array of references
+    casesInvolved: [{ 
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'Case',
     }],
-    offersPlaced: [{ // Correctly defining as an array of references
+    offersPlaced: [{ 
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Offer',
     }],

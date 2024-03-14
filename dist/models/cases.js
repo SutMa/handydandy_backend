@@ -54,7 +54,7 @@ const caseSchema = new mongoose_1.Schema({
     },
     tradesmanId: {
         type: mongoose_1.Schema.Types.ObjectId,
-        ref: 'Tradesman' // This can be initially null until a tradesman is assigned
+        ref: 'Tradesman'
     }
 });
 const Case = mongoose_1.default.model('Case', caseSchema);

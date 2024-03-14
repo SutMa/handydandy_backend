@@ -28,7 +28,7 @@ const userSchema = new mongoose_1.Schema({
     password: {
         type: String,
         required: true,
-        unique: true,
+        unique: false,
     },
     email: {
         type: String,
@@ -43,14 +43,17 @@ const userSchema = new mongoose_1.Schema({
         type: String,
         required: true,
     },
+    zipcode: {
+        type: Number,
+        required: true,
+    },
     profileCompleted: {
         type: Boolean,
-        default: false,
+        default: true,
     },
     cases: [
         { type: mongoose_1.Schema.Types.ObjectId, ref: 'Case' }
     ],
-    default: []
 });
 const User = mongoose_1.default.model('User', userSchema);
 exports.default = User;

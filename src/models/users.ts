@@ -7,13 +7,14 @@ interface IUser extends Document {
     address: string;
     profileCompleted: boolean;
     cases: mongoose.Types.ObjectId[];
+    zipcode: number;
 }
 
 const userSchema = new Schema({
-    password: { // Add this field
+    password: { 
         type: String,
         required: true,
-        unique: true,
+        unique: false,
     },
     email: {
         type: String,
@@ -28,14 +29,18 @@ const userSchema = new Schema({
         type: String,
         required: true,
     },
+    zipcode:{
+        type: Number,
+        required: true,
+    },
     profileCompleted: {
         type: Boolean,
-        default: false,
+        default: true,
     },
     cases: [
-        { type: Schema.Types.ObjectId, ref: 'Case' }
+        { type: Schema.Types.ObjectId, ref: 'Case'}
     ],
-    default: []
+    
 });
 
 const User = mongoose.model<IUser>('User', userSchema);

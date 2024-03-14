@@ -1,15 +1,14 @@
 import express from 'express';
-import {runDB} from './db';
+const { MongoClient, ServerApiVersion } = require("mongodb");
+require('dotenv').config()
+
+
+
 
 
 const PORT = 3000;
-const appExpress = express();
+const app = express();
 
-try{
-    runDB()
-}catch (e){
-    console.log(e);
-}
 
 //models
 import User from './models/users';
@@ -20,14 +19,27 @@ import Chat from './models/chat'
 import bodyParser from 'body-parser';
 
 // use middleware
-appExpress.use(express.json)
+app.use(express.json())
+
 
 // import routes
-import userRegisterRoute from './routes/loginRoute'
+import userRegisterRoute from './routes/userRoutes'
+import tradesmanRoute from './routes/tradesmanRoutes'
 
 //use routes
-appExpress.use('/user', userRegisterRoute)
+app.use('/user', userRegisterRoute)
+app.use('/tradesman', tradesmanRoute)
 
-appExpress.listen(PORT, () => {
+
+//database connection
+const mongoose = require('mongoose')
+require('dotenv').config()
+
+const uri = process.env.uri
+mongoose.connect(uri)
+
+
+
+app.listen(PORT, () => {
     console.log("Server is running on port " + PORT);
 });
