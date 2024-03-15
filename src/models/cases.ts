@@ -9,6 +9,7 @@ interface ICases extends Document {
     tradesmanId: mongoose.Types.ObjectId;
     userId: mongoose.Types.ObjectId;
     zipcode: number;
+    images: string;
 }
 
 const caseSchema = new Schema({
@@ -51,11 +52,12 @@ const caseSchema = new Schema({
         type: Schema.Types.Number,
         ref: 'User',
         required: true,
-    }
-    
-});
+    },
+    images: [{
+        data: Buffer,
+        contentType: String
+    }],
+}, { timestamps: true });
 
 const Case = mongoose.model<ICases>('Case', caseSchema);
 export default Case;
-
-

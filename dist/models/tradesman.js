@@ -48,7 +48,7 @@ const tradesmanSchema = new mongoose_1.Schema({
     summary: {
         type: String,
         required: true,
-        maxlength: 200,
+        maxlength: 300,
     },
     averagePriceRange: {
         type: Number,

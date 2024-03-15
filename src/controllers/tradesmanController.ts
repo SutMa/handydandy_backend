@@ -50,6 +50,19 @@ const tradesmanSignIn = async (req: Request, res: Response) => {
     }
 }
 
+const tradesmanEdit = async (req: Request, res: Response) => {
+    if (!req.user){
+        return res.status(400).json({error: "User not logged in"})
+    }
+    console.log(req.user.ID)
 
-export {tradesmanSignIn, tradesmanRegister}
+    try{
+        const updatedTradesman = await Tradesman.findByIdAndUpdate(req.user.ID, {summary: req.body.summary, averagePriceRange: req.body.averagePriceRange, serviceArea: req.body.serviceArea}, {new: true})
+        console.log(updatedTradesman)
+        return res.status(200).json(updatedTradesman)
+    }catch(e){
+        return res.status(500).json({error: "Internal server error"})
+    }
+}
 
+export {tradesmanSignIn, tradesmanRegister, tradesmanEdit}

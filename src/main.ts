@@ -1,14 +1,10 @@
 import express from 'express';
 const { MongoClient, ServerApiVersion } = require("mongodb");
-require('dotenv').config()
-
-
-
-
+const {Storage} = require ('@google-cloud/storage')
+const path = require('path')
 
 const PORT = 3000;
 const app = express();
-
 
 //models
 import User from './models/users';
@@ -26,6 +22,7 @@ app.use(express.json())
 import userRegisterRoute from './routes/userRoutes'
 import tradesmanRoute from './routes/tradesmanRoutes'
 import caseRoute from './routes/caseRoutes'
+import { cert } from 'firebase-admin/app';
 
 //use routes
 app.use('/user', userRegisterRoute)
@@ -39,8 +36,16 @@ require('dotenv').config()
 const uri = process.env.uri
 mongoose.connect(uri)
 
+//Google Cloud Bucket Connection
+if (typeof process.env.GOOGLE_CLOUD_CREDENTIALS === 'undefined') {
+    throw new Error('GOOGLE_CLOUD_CREDENTIALS environment variable is not set.');
+}
+const credentials = JSON.parse(process.env.GOOGLE_CLOUD_CREDENTIALS)
+const storage = new Storage({ credentials})
 
 
 app.listen(PORT, () => {
     console.log("Server is running on port " + PORT);
 });
+
+

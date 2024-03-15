@@ -46,6 +46,10 @@ const offerSchema = new mongoose_1.Schema({
     accepted: {
         type: Boolean,
         default: false
+    },
+    caseId: {
+        type: mongoose_1.Schema.Types.ObjectId,
+        ref: ""
     }
 }, { timestamps: true });
 const Offer = mongoose_1.default.model('Offer', offerSchema);

@@ -3,7 +3,7 @@ import mongoose from 'mongoose'
 import User from '../models/users'
 import Case from '../models/cases'
 import Tradesman from '../models/tradesman'
-import { verifyToken } from '../middleware/authMiddleware'
+import { verifyUserToken } from '../middleware/authUser'
 
 interface caseInfo {
     status: string;

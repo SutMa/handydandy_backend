@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.verifyToken = void 0;
+exports.verifyTradesmanToken = void 0;
 const jwt = require('jsonwebtoken');
-function verifyToken(req, res, next) {
+function verifyTradesmanToken(req, res, next) {
     const token = req.header('Authorization');
     if (!token) {
         return res.status(401).json({ error: "Access Denied" });
@@ -10,7 +10,7 @@ function verifyToken(req, res, next) {
     try {
         const decoded = jwt.verify(token, "my-secret-key");
         console.log(decoded);
-        req.user = { ID: decoded.userId };
+        req.user = { ID: decoded.tradesmanId };
         next();
     }
     catch (e) {
@@ -23,4 +23,4 @@ function verifyToken(req, res, next) {
         return res.status(401).json({ error: "Access Denied because of internal error" });
     }
 }
-exports.verifyToken = verifyToken;
+exports.verifyTradesmanToken = verifyTradesmanToken;

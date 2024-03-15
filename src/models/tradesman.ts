@@ -40,7 +40,7 @@ const tradesmanSchema = new Schema({
     summary: {
         type: String,
         required: true,
-        maxlength: 200,
+        maxlength: 300,
     },
     averagePriceRange: {
         type: Number,
@@ -52,7 +52,7 @@ const tradesmanSchema = new Schema({
     }],
     profileCompleted: { 
         type: Boolean,
-        default: false,
+        default: false, 
     },
     casesInvolved: [{ 
         type: mongoose.Schema.Types.ObjectId, 
