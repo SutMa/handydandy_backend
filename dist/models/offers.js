@@ -25,20 +25,15 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importStar(require("mongoose"));
 const offerSchema = new mongoose_1.Schema({
-    caseId: {
-        type: mongoose_1.Schema.Types.ObjectId,
-        ref: 'Case',
-        required: true
-    },
     tradesmanId: {
         type: mongoose_1.Schema.Types.ObjectId,
         ref: 'Tradesman',
         required: true
     },
-    message: {
-        type: String,
-        required: true,
-        maxlength: 500,
+    userId: {
+        type: mongoose_1.Schema.Types.ObjectId,
+        ref: "User",
+        required: true
     },
     price: {
         type: Number,

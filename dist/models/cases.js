@@ -31,12 +31,15 @@ const caseSchema = new mongoose_1.Schema({
         enum: ['Posted', 'Pending', 'Done'],
         default: 'Posted'
     },
-    timeAvailable: {
-        type: Date,
-        required: true
-    },
+    timeAvailable: [
+        {
+            type: Date,
+            required: true,
+        }
+    ],
     timeComing: {
-        type: Date
+        type: Date,
+        required: false,
     },
     address: {
         type: String,
@@ -45,16 +48,22 @@ const caseSchema = new mongoose_1.Schema({
     chatId: {
         type: mongoose_1.Schema.Types.ObjectId,
         ref: 'Chat',
-        required: true
-    },
-    firebaseUid: {
-        type: mongoose_1.Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
+        required: false
     },
     tradesmanId: {
         type: mongoose_1.Schema.Types.ObjectId,
-        ref: 'Tradesman'
+        ref: 'Tradesman',
+        required: false,
+    },
+    userId: {
+        type: mongoose_1.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+    },
+    zipcode: {
+        type: mongoose_1.Schema.Types.Number,
+        ref: 'User',
+        required: true,
     }
 });
 const Case = mongoose_1.default.model('Case', caseSchema);

@@ -8,10 +8,15 @@ export function verifyToken(req: Request, res: Response, next: NextFunction){
     }
     try{
         const decoded = jwt.verify(token, "my-secret-key")
-        req.body.userId = decoded.userId
+        req.user = {ID: decoded.userId}
         next();
     }catch(e){
-
+        if (e instanceof jwt.TokenExpiredError){
+            return res.status(401).json({error: "Token expired"})
+        }else if (e instanceof jwt.JsonWebTokenError){
+            return res.status(401).json({error: "Invalid token"})
+        }
+        return res.status(401).json({error: "Access Denied because of internal error"})
     }
 }
 

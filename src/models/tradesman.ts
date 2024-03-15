@@ -1,13 +1,14 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
-// Correcting the typo in variable name and "Painting"
-const availableTrades = ['Electrician', 'Plumber', 'Carpenting', 'Painting', 'Auto Mechanic', 'Roofing', 'Glass'];
+
+type AvailableTrade = 'Electrician' | 'Plumber' | 'Carpenting' | 'Painting' | 'Auto Mechanic' | 'Roofing' | 'Glass';
+const availableTrades: AvailableTrade[] = ['Electrician', 'Plumber', 'Carpenting', 'Painting', 'Auto Mechanic', 'Roofing', 'Glass'];
 
 interface ITradesmen extends Document {
-    password: string; // Added field for Firebase UID
+    password: string;
     email: string;
     name: string;
-    tradeOccupation: string;
+    tradeOccupation: AvailableTrade;
     summary: string;
     averagePriceRange: number;
     serviceArea: number[];
@@ -16,10 +17,8 @@ interface ITradesmen extends Document {
     offersPlaced: mongoose.Schema.Types.ObjectId[];
 }
 
-
-
 const tradesmanSchema = new Schema({
-    password: { // Adding the Firebase UID field
+    password: { 
         type: String,
         required: true,
         unique: true,
@@ -34,9 +33,9 @@ const tradesmanSchema = new Schema({
         required: true,
     },
     tradeOccupation: {
-        type: String,
+        type: String, 
         required: true,
-        enum: availableTrades, // Using the corrected variable name
+        enum: availableTrades, 
     },
     summary: {
         type: String,
@@ -48,10 +47,10 @@ const tradesmanSchema = new Schema({
         required: true,
     },
     serviceArea: [{
-            type: Number,
-            require:true
+        type: Number,
+        required: true
     }],
-    profileCompleted: {
+    profileCompleted: { 
         type: Boolean,
         default: false,
     },

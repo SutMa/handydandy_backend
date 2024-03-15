@@ -24,7 +24,6 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importStar(require("mongoose"));
-// Correcting the typo in variable name and "Painting"
 const availableTrades = ['Electrician', 'Plumber', 'Carpenting', 'Painting', 'Auto Mechanic', 'Roofing', 'Glass'];
 const tradesmanSchema = new mongoose_1.Schema({
     password: {
@@ -44,7 +43,7 @@ const tradesmanSchema = new mongoose_1.Schema({
     tradeOccupation: {
         type: String,
         required: true,
-        enum: availableTrades, // Using the corrected variable name
+        enum: availableTrades,
     },
     summary: {
         type: String,
@@ -57,7 +56,7 @@ const tradesmanSchema = new mongoose_1.Schema({
     },
     serviceArea: [{
             type: Number,
-            require: true
+            required: true
         }],
     profileCompleted: {
         type: Boolean,

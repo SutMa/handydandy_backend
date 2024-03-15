@@ -25,11 +25,12 @@ app.use(express.json())
 // import routes
 import userRegisterRoute from './routes/userRoutes'
 import tradesmanRoute from './routes/tradesmanRoutes'
+import caseRoute from './routes/caseRoutes'
 
 //use routes
 app.use('/user', userRegisterRoute)
 app.use('/tradesman', tradesmanRoute)
-
+app.use('/case', caseRoute) 
 
 //database connection
 const mongoose = require('mongoose')

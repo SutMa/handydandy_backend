@@ -17,6 +17,7 @@ const tradesmanRegister = async (req, res) => {
         res.status(200).json({ message: "Tradesman Registrataion Success" });
     }
     catch (e) {
+        console.log(e);
         res.status(400).json({ message: "Tradesman registration failed" });
     }
 };
@@ -32,7 +33,7 @@ const tradesmanSignIn = async (req, res) => {
         if (!matchedPassword) {
             return res.status(401).json({ error: "Authentication failed" });
         }
-        const token = jwt.sign({ tradesmanId: tradesman._id }, "my-secret-key", { expiresIn: '1h' });
+        const token = jwt.sign({ tradesmanId: tradesman._id }, "my-secret-key", { expiresIn: '360h' });
         res.status(200).json({ token });
     }
     catch (e) {

@@ -1,20 +1,24 @@
 import mongoose, { Schema } from 'mongoose';
 
+interface IOffer {
+    tradesmanId: mongoose.Types.ObjectId;
+    userId: mongoose.Types.ObjectId;
+    price: number;
+    caseId: mongoose.Types.ObjectId;
+    timeComing: Date;
+    accepted: boolean;
+}
+
 const offerSchema = new Schema({
-    caseId: {
-        type: Schema.Types.ObjectId,
-        ref: 'Case',
-        required: true
-    },
     tradesmanId: {
         type: Schema.Types.ObjectId,
         ref: 'Tradesman',
         required: true
     },
-    message: {
-        type: String,
-        required: true,
-        maxlength: 500, 
+    userId:{
+        type: Schema.Types.ObjectId,
+        ref: "User",
+        required: true
     },
     price: {
         type: Number,
@@ -27,8 +31,12 @@ const offerSchema = new Schema({
     accepted: {
         type: Boolean,
         default: false
+    },
+    caseId: {
+        type: Schema.Types.ObjectId,
+        ref: ""
     }
 }, { timestamps: true });
 
-const Offer = mongoose.model('Offer', offerSchema);
+const Offer = mongoose.model<IOffer>('Offer', offerSchema);
 export default Offer;
