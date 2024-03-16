@@ -48,12 +48,10 @@ const caseSchema = new mongoose_1.Schema({
     chatId: {
         type: mongoose_1.Schema.Types.ObjectId,
         ref: 'Chat',
-        required: false
     },
     tradesmanId: {
         type: mongoose_1.Schema.Types.ObjectId,
         ref: 'Tradesman',
-        required: false,
     },
     userId: {
         type: mongoose_1.Schema.Types.ObjectId,
@@ -64,7 +62,10 @@ const caseSchema = new mongoose_1.Schema({
         type: mongoose_1.Schema.Types.Number,
         ref: 'User',
         required: true,
-    }
-});
+    },
+    images: [{
+            type: String,
+        }],
+}, { timestamps: true });
 const Case = mongoose_1.default.model('Case', caseSchema);
 exports.default = Case;

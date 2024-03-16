@@ -24,7 +24,6 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importStar(require("mongoose"));
-// Define the schema for individual messages in the chat
 const messageSchema = new mongoose_1.Schema({
     senderId: {
         type: mongoose_1.Schema.Types.ObjectId,

@@ -2,7 +2,7 @@ import mongoose, { Schema, Document } from 'mongoose';
 
 interface ICases extends Document {
     status: string;
-    timeAvialible: Date[];
+    timeAvialible: ITimeSlot[];
     timeComing: Date;
     address: string;
     chatId: mongoose.Types.ObjectId;
@@ -10,7 +10,18 @@ interface ICases extends Document {
     userId: mongoose.Types.ObjectId;
     zipcode: number;
     images: string[];
+    summary: string;
 }
+
+interface ITimeSlot {
+    date: Date;
+    timeRange: string;
+}
+
+const timeSlotSchema = new Schema({
+    date: {type: Date, required: true},
+    timeRage: {type: String, required: true}
+})
 
 const caseSchema = new Schema({
     status: {
@@ -20,28 +31,23 @@ const caseSchema = new Schema({
         default: 'Posted'
     },
     timeAvailable:[
-        {
-            type: Date,
-            required: true,
-        }
+        timeSlotSchema
     ],
     timeComing: {
         type: Date,
         required: false,
     },
     address: {
-        type: String,
+        type: Schema.Types.ObjectId,
         required: true
     },
     chatId: {
         type: Schema.Types.ObjectId,
         ref: 'Chat',
-        required: false
     },
     tradesmanId: {
         type: Schema.Types.ObjectId,
         ref: 'Tradesman',
-        required: false,
     },
     userId: {
         type: Schema.Types.ObjectId,
@@ -56,6 +62,9 @@ const caseSchema = new Schema({
     images: [{
         type: String,
     }],
+    summary: {
+        type: String,
+    }
 }, { timestamps: true });
 
 const Case = mongoose.model<ICases>('Case', caseSchema);
