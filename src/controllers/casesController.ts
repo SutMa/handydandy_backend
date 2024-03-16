@@ -8,12 +8,10 @@ import { verifyUserToken } from '../middleware/authUser'
 interface caseInfo {
     status: string;
     timeAvialible: Date[];
-    timeComing: Date;
     address: string;
     chatId: mongoose.Types.ObjectId;
     tradesmanId: mongoose.Types.ObjectId;
 }
-
 
 
 const makeNewCase = async (req: Request, res: Response) => {
