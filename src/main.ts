@@ -1,6 +1,5 @@
 import express from 'express';
 const { MongoClient, ServerApiVersion } = require("mongodb");
-const {Storage} = require ('@google-cloud/storage')
 const path = require('path')
 
 const PORT = 3000;
@@ -35,14 +34,6 @@ require('dotenv').config()
 
 const uri = process.env.uri
 mongoose.connect(uri)
-
-//Google Cloud Bucket Connection
-if (typeof process.env.GOOGLE_CLOUD_CREDENTIALS === 'undefined') {
-    throw new Error('GOOGLE_CLOUD_CREDENTIALS environment variable is not set.');
-}
-const credentials = JSON.parse(process.env.GOOGLE_CLOUD_CREDENTIALS)
-const storage = new Storage({ credentials})
-
 
 app.listen(PORT, () => {
     console.log("Server is running on port " + PORT);
