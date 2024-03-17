@@ -24,6 +24,10 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importStar(require("mongoose"));
+const timeSlotSchema = new mongoose_1.Schema({
+    date: { type: Date, required: true },
+    timeRange: { type: String, required: true }
+});
 const caseSchema = new mongoose_1.Schema({
     status: {
         type: String,
@@ -32,17 +36,14 @@ const caseSchema = new mongoose_1.Schema({
         default: 'Posted'
     },
     timeAvailable: [
-        {
-            type: Date,
-            required: true,
-        }
+        timeSlotSchema
     ],
     timeComing: {
         type: Date,
         required: false,
     },
     address: {
-        type: String,
+        type: mongoose_1.Schema.Types.ObjectId,
         required: true
     },
     chatId: {
@@ -66,6 +67,9 @@ const caseSchema = new mongoose_1.Schema({
     images: [{
             type: String,
         }],
+    summary: {
+        type: String,
+    }
 }, { timestamps: true });
 const Case = mongoose_1.default.model('Case', caseSchema);
 exports.default = Case;

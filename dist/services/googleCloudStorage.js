@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getBucket = void 0;
+exports.uploadImageToBucket = exports.getBucket = void 0;
 const { Storage: GoogleCloudStorage } = require('@google-cloud/storage');
 require("dotenv").config();
 if (typeof process.env.GOOGLE_CLOUD_CREDENTIALS === 'undefined') {
@@ -24,4 +24,4 @@ async function uploadImageToBucket(file, caseId, bucketName) {
     });
     return `https://storage.googleapis.com/${bucketName}/${encodeURIComponent(fileName)}`;
 }
-module.exports = { uploadImageToBucket };
+exports.uploadImageToBucket = uploadImageToBucket;

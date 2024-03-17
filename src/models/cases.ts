@@ -20,7 +20,7 @@ interface ITimeSlot {
 
 const timeSlotSchema = new Schema({
     date: {type: Date, required: true},
-    timeRage: {type: String, required: true}
+    timeRange: {type: String, required: true}
 })
 
 const caseSchema = new Schema({
