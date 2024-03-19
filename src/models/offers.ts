@@ -5,14 +5,20 @@ interface IOffer {
     userId: mongoose.Types.ObjectId;
     price: number;
     caseId: mongoose.Types.ObjectId;
-    timeComing: Date;
+    timeComing: ITimeSlot;
     accepted: boolean;
     summary: string
 }
 
-const timeComingSchema = new Schema({
-    date: {type: Date, required: true},
-    timeRange: {type: String, required: true}
+
+interface ITimeSlot {
+    startTime: Date;
+    endTime: Date;
+}
+
+const timeFrameSchema = new Schema({
+    startTime: {type: Date, required: true},
+    endTime: {type: Date, required: true}
 })
 
 const offerSchema = new Schema({
@@ -31,7 +37,7 @@ const offerSchema = new Schema({
         required: true
     },
     timeComing: {
-        type: timeComingSchema,
+        type: timeFrameSchema,
         required: true 
     },
     accepted: {
@@ -40,7 +46,7 @@ const offerSchema = new Schema({
     },
     caseId: {
         type: Schema.Types.ObjectId,
-        ref: ""
+        ref: "Case"
     },
     summary: {
         type: String,

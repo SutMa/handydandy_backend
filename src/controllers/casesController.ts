@@ -3,14 +3,9 @@ import mongoose from 'mongoose';
 import User from '../models/users';
 import Case from '../models/cases';
 import { uploadImageToBucket } from '../services/googleCloudStorage';
-import multer from 'multer';
+
 
 require('dotenv').config();
-
-interface TimeSlot {
-  date: string;
-  timeRange: string;
-}
 
 const makeNewCase = async (req: Request, res: Response) => {
     try {
@@ -39,10 +34,7 @@ const makeNewCase = async (req: Request, res: Response) => {
 
         const newCase = new Case({
             userId: userId,
-            timeAvailable: timeAvailable.map((slot: TimeSlot) => ({
-                date: new Date(slot.date),
-                timeRange: slot.timeRange
-            })),
+            timeAvailable: timeAvailable,
             summary: summary,
             address: user.address,
             zipcode: user.zipcode,

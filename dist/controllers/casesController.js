@@ -29,10 +29,7 @@ const makeNewCase = async (req, res) => {
         }
         const newCase = new cases_1.default({
             userId: userId,
-            timeAvailable: timeAvailable.map((slot) => ({
-                date: new Date(slot.date),
-                timeRange: slot.timeRange
-            })),
+            timeAvailable: timeAvailable,
             summary: summary,
             address: user.address,
             zipcode: user.zipcode,

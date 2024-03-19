@@ -7,7 +7,7 @@ exports.makeOffer = void 0;
 const offers_1 = __importDefault(require("../models/offers"));
 const cases_1 = __importDefault(require("../models/cases"));
 const tradesman_1 = __importDefault(require("../models/tradesman"));
-const isTimeSlotValid_1 = require("../helpers/isTimeSlotValid"); // Ensure this is correctly imported
+const timeValidation_1 = require("../helpers/timeValidation");
 const makeOffer = async (req, res) => {
     try {
         const tradesmanId = req.user?.ID;
@@ -26,22 +26,18 @@ const makeOffer = async (req, res) => {
         if (!tradesman) {
             return res.status(401).json({ error: "Tradesman not found" });
         }
-        // Ensure timeComing from the request is structured correctly
-        const timeComing = {
-            date: new Date(req.body.date), // Assuming req.body.timeComing.date is an ISO string
-            timeRange: req.body.timeRange // Assuming req.body.timeComing.timeRange is a string like "09:00-10:00"
-        };
-        // Validate the time slot
-        const isValidTimeSlot = (0, isTimeSlotValid_1.isTimeSlotValid)(timeComing, caseForOffer.timeAvailable);
-        if (!isValidTimeSlot) {
-            return res.status(400).json({ error: "Selected time slot not available" });
+        const timeComing = req.body.timeComing;
+        if (!timeComing) {
+            return res.status(401).json({ error: "Time coming field is not found" });
         }
-        // Proceed with creating the offer
+        if (!(0, timeValidation_1.timeValidation)(timeComing, caseForOffer.timeAvailable)) {
+            return res.status(401).json({ error: "Time is not valid for this case" });
+        }
         const newOffer = new offers_1.default({
             tradesmanId: tradesman._id,
             userId: caseForOffer.userId,
             price: req.body.price,
-            timeComing: timeComing, // Assuming you handle this object correctly in your schema
+            timeComing: timeComing,
             caseId: caseForOffer._id,
             summary: req.body.summary,
         });

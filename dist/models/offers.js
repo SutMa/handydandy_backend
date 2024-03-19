@@ -24,9 +24,9 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importStar(require("mongoose"));
-const timeComingSchema = new mongoose_1.Schema({
-    date: { type: Date, required: true },
-    timeRange: { type: String, required: true }
+const timeFrameSchema = new mongoose_1.Schema({
+    startTime: { type: Date, required: true },
+    endTime: { type: Date, required: true }
 });
 const offerSchema = new mongoose_1.Schema({
     tradesmanId: {
@@ -44,7 +44,7 @@ const offerSchema = new mongoose_1.Schema({
         required: true
     },
     timeComing: {
-        type: timeComingSchema,
+        type: timeFrameSchema,
         required: true
     },
     accepted: {
@@ -53,7 +53,7 @@ const offerSchema = new mongoose_1.Schema({
     },
     caseId: {
         type: mongoose_1.Schema.Types.ObjectId,
-        ref: ""
+        ref: "Case"
     },
     summary: {
         type: String,

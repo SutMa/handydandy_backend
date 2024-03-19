@@ -1,9 +1,9 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import mongoose from 'mongoose';
 import Offer from "../models/offers";
 import Case from '../models/cases';
 import Tradesman from "../models/tradesman";
-import { isTimeSlotValid } from "../helpers/isTimeSlotValid"; // Ensure this is correctly imported
+import { timeValidation } from "../helpers/timeValidation";
 
 const makeOffer = async (req: Request, res: Response) => {
     try {
@@ -27,34 +27,46 @@ const makeOffer = async (req: Request, res: Response) => {
             return res.status(401).json({ error: "Tradesman not found" });
         }
 
-        // Ensure timeComing from the request is structured correctly
-        const timeComing = {
-            date: new Date(req.body.date), // Assuming req.body.timeComing.date is an ISO string
-            timeRange: req.body.timeRange // Assuming req.body.timeComing.timeRange is a string like "09:00-10:00"
-        };
-
-        // Validate the time slot
-        const isValidTimeSlot = isTimeSlotValid(timeComing, caseForOffer.timeAvailable);
-        if (!isValidTimeSlot) {
-            return res.status(400).json({ error: "Selected time slot not available" });
+        
+        const timeComing = req.body.timeComing
+        if(!timeComing){
+            return res.status(401).json({ error: "Time coming field is not found"})
         }
+       
+       if(!timeValidation(timeComing, caseForOffer.timeAvailable)){
+            return res.status(401).json({error: "Time is not valid for this case"})
+       }
 
-        // Proceed with creating the offer
+        
         const newOffer = new Offer({
             tradesmanId: tradesman._id,
             userId: caseForOffer.userId,
             price: req.body.price,
-            timeComing: timeComing, // Assuming you handle this object correctly in your schema
+            timeComing: timeComing, 
             caseId: caseForOffer._id,
             summary: req.body.summary,
         });
-
+        
         await newOffer.save();
+        tradesman.casesInvolved.push(caseForOffer._id)
+
         return res.status(201).json(newOffer);
     } catch (e) {
         console.log(e);
         return res.status(500).json({ error: "Internal Server Error" });
     }
 };
+
+
+
+const deleteOffer = async (req: Request, res: Response) => {
+
+    const tradesmanId = req.user?.ID
+    if (!tradesmanId) {
+        return res.status(401).json({ error: "Did not find tradesmanId" });
+    }
+
+    
+}
 
 export { makeOffer };

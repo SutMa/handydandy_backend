@@ -3,7 +3,7 @@ import mongoose, { Schema, Document } from 'mongoose';
 interface ICases extends Document {
     status: string;
     timeAvailable: ITimeSlot[];
-    timeComing: Date;
+    timeComing: ITimeSlot;
     address: string;
     chatId: mongoose.Types.ObjectId;
     tradesmanId: mongoose.Types.ObjectId;
@@ -14,13 +14,13 @@ interface ICases extends Document {
 }
 
 interface ITimeSlot {
-    date: Date;
-    timeRange: string;
+    startTime: Date;
+    endTime: Date;
 }
 
-const timeSlotSchema = new Schema({
-    date: {type: Date, required: true},
-    timeRange: {type: String, required: true}
+const timeFrameSchema = new Schema({
+    startTime: {type: Date, required: true},
+    endTime: {type: Date, required: true}
 })
 
 const caseSchema = new Schema({
@@ -31,10 +31,10 @@ const caseSchema = new Schema({
         default: 'Posted'
     },
     timeAvailable:[
-        timeSlotSchema
+        timeFrameSchema
     ],
     timeComing: {
-        type: Date,
+        type: timeFrameSchema,
         required: false,
     },
     address: {
