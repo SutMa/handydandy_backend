@@ -2,7 +2,7 @@ import mongoose, { Schema, Document } from 'mongoose';
 
 interface ICases extends Document {
     status: string;
-    timeAvialible: ITimeSlot[];
+    timeAvailable: ITimeSlot[];
     timeComing: Date;
     address: string;
     chatId: mongoose.Types.ObjectId;
@@ -38,7 +38,7 @@ const caseSchema = new Schema({
         required: false,
     },
     address: {
-        type: Schema.Types.ObjectId,
+        type: String,
         required: true
     },
     chatId: {
@@ -61,9 +61,11 @@ const caseSchema = new Schema({
     },
     images: [{
         type: String,
+        required: false,
     }],
     summary: {
         type: String,
+        required: true,
     }
 }, { timestamps: true });
 

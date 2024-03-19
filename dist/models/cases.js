@@ -43,7 +43,7 @@ const caseSchema = new mongoose_1.Schema({
         required: false,
     },
     address: {
-        type: mongoose_1.Schema.Types.ObjectId,
+        type: String,
         required: true
     },
     chatId: {
@@ -66,9 +66,11 @@ const caseSchema = new mongoose_1.Schema({
     },
     images: [{
             type: String,
+            required: false,
         }],
     summary: {
         type: String,
+        required: true,
     }
 }, { timestamps: true });
 const Case = mongoose_1.default.model('Case', caseSchema);

@@ -21,12 +21,13 @@ app.use(express.json())
 import userRegisterRoute from './routes/userRoutes'
 import tradesmanRoute from './routes/tradesmanRoutes'
 import caseRoute from './routes/caseRoutes'
-import { cert } from 'firebase-admin/app';
+import offerRoute from './routes/offerRoutes'
 
 //use routes
 app.use('/user', userRegisterRoute)
 app.use('/tradesman', tradesmanRoute)
 app.use('/case', caseRoute) 
+app.use('/offer',offerRoute)
 
 //database connection
 const mongoose = require('mongoose')

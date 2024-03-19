@@ -14,10 +14,12 @@ app.use(express_1.default.json());
 const userRoutes_1 = __importDefault(require("./routes/userRoutes"));
 const tradesmanRoutes_1 = __importDefault(require("./routes/tradesmanRoutes"));
 const caseRoutes_1 = __importDefault(require("./routes/caseRoutes"));
+const offerRoutes_1 = __importDefault(require("./routes/offerRoutes"));
 //use routes
 app.use('/user', userRoutes_1.default);
 app.use('/tradesman', tradesmanRoutes_1.default);
 app.use('/case', caseRoutes_1.default);
+app.use('/offer', offerRoutes_1.default);
 //database connection
 const mongoose = require('mongoose');
 require('dotenv').config();

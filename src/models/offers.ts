@@ -7,7 +7,13 @@ interface IOffer {
     caseId: mongoose.Types.ObjectId;
     timeComing: Date;
     accepted: boolean;
+    summary: string
 }
+
+const timeComingSchema = new Schema({
+    date: {type: Date, required: true},
+    timeRange: {type: String, required: true}
+})
 
 const offerSchema = new Schema({
     tradesmanId: {
@@ -25,7 +31,7 @@ const offerSchema = new Schema({
         required: true
     },
     timeComing: {
-        type: Date,
+        type: timeComingSchema,
         required: true 
     },
     accepted: {
@@ -35,6 +41,10 @@ const offerSchema = new Schema({
     caseId: {
         type: Schema.Types.ObjectId,
         ref: ""
+    },
+    summary: {
+        type: String,
+        required: true,
     }
 }, { timestamps: true });
 

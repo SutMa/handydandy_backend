@@ -7,8 +7,6 @@ import multer from 'multer';
 
 require('dotenv').config();
 
-const upload = multer({ storage: multer.memoryStorage() });
-
 interface TimeSlot {
   date: string;
   timeRange: string;
@@ -26,7 +24,7 @@ const makeNewCase = async (req: Request, res: Response) => {
             return res.status(404).json({ error: "User not found" });
         }
 
-        const { summary } = req.body as {  summary: string };
+        const summary = req.body.summary as {  summary: string };
         
         if (!summary) {
             console.log(summary)
@@ -70,5 +68,7 @@ const makeNewCase = async (req: Request, res: Response) => {
         res.status(500).json({ error: "Internal Server Error" });
     }
 };
+
+
 
 export {makeNewCase}

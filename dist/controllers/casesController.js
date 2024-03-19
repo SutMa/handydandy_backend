@@ -7,9 +7,7 @@ exports.makeNewCase = void 0;
 const users_1 = __importDefault(require("../models/users"));
 const cases_1 = __importDefault(require("../models/cases"));
 const googleCloudStorage_1 = require("../services/googleCloudStorage");
-const multer_1 = __importDefault(require("multer"));
 require('dotenv').config();
-const upload = (0, multer_1.default)({ storage: multer_1.default.memoryStorage() });
 const makeNewCase = async (req, res) => {
     try {
         const userId = req.user?.ID;
@@ -20,7 +18,7 @@ const makeNewCase = async (req, res) => {
         if (!user) {
             return res.status(404).json({ error: "User not found" });
         }
-        const { summary } = req.body;
+        const summary = req.body.summary;
         if (!summary) {
             console.log(summary);
             return res.status(400).json({ message: "Summary is required" });

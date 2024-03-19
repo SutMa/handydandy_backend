@@ -1,6 +1,7 @@
 import express from 'express'
 import { verifyTradesmanToken } from '../middleware/authTradesman';
 import {tradesmanRegister, tradesmanSignIn, tradesmanEdit} from '../controllers/tradesmanController'
+
 const router = express.Router();
 
 router.post('/register', tradesmanRegister)
