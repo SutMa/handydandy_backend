@@ -8,4 +8,5 @@ const authTradesman_1 = require("../middleware/authTradesman");
 const offerController_1 = require("../controllers/offerController");
 const router = express_1.default.Router();
 router.post("/create", authTradesman_1.verifyTradesmanToken, offerController_1.makeOffer);
+router.get("/get", authTradesman_1.verifyTradesmanToken, offerController_1.getOffers);
 exports.default = router;

@@ -49,22 +49,38 @@ const makeOffer = async (req: Request, res: Response) => {
         });
         
         await newOffer.save()
-        tradesman.offersPlaced.push()
 
-        return res.status(201).json(newOffer);
+        await Tradesman.updateOne(
+            {_id: tradesmanId},
+            {$push: {offersPlaced: newOffer._id}}
+        )
+
+        return res.status(201).json(newOffer)
     } catch (e) {
         console.log(e);
         return res.status(500).json({ error: "Internal Server Error" });
     }
 };
 
+const getOffers = async (req: Request, res: Response) => {
+    try{
+        const tradesmanId = req.user?.ID
+        if (!tradesmanId) {
+            return res.status(400).json({error: "No tradesman ID"})
+        }
 
+        const tradesman = await Tradesman.findById(tradesmanId)
+        if(!tradesman) {
+            return res.status(400).json({error: "Tradesman not found"})
+        }
 
-const deleteOffer = async (req: Request, res: Response) => {
-
-    
-
-    
+        const offersToFind = await tradesman.offersPlaced
+        console.log(offersToFind)
+        const offers = await Case.find({_id: {$in: offersToFind}}).exec()
+        return res.status(200).json(offers)
+    }catch(e){
+        return res.status(500).json({error: "Internal server errror"})
+    }
 }
 
-export { makeOffer };
+export { makeOffer, getOffers };

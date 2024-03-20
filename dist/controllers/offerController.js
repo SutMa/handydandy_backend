@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.makeOffer = void 0;
+exports.getOffers = exports.makeOffer = void 0;
 const offers_1 = __importDefault(require("../models/offers"));
 const cases_1 = __importDefault(require("../models/cases"));
 const tradesman_1 = __importDefault(require("../models/tradesman"));
@@ -42,7 +42,7 @@ const makeOffer = async (req, res) => {
             summary: req.body.summary,
         });
         await newOffer.save();
-        tradesman.casesInvolved.push(caseForOffer._id);
+        await tradesman_1.default.updateOne({ _id: tradesmanId }, { $push: { offersPlaced: newOffer._id } });
         return res.status(201).json(newOffer);
     }
     catch (e) {
@@ -51,5 +51,22 @@ const makeOffer = async (req, res) => {
     }
 };
 exports.makeOffer = makeOffer;
-const deleteOffer = async (req, res) => {
+const getOffers = async (req, res) => {
+    try {
+        const tradesmanId = req.user?.ID;
+        if (!tradesmanId) {
+            return res.status(400).json({ error: "No tradesman ID" });
+        }
+        const tradesman = await tradesman_1.default.findById(tradesmanId);
+        if (!tradesman) {
+            return res.status(400).json({ error: "Tradesman not found" });
+        }
+        const offersToFind = await tradesman.offersPlaced;
+        const offers = await cases_1.default.find({ _id: { $in: offersToFind } }).exec();
+        return res.status(200).json(offers);
+    }
+    catch (e) {
+        return res.status(500).json({ error: "Internal server errror" });
+    }
 };
+exports.getOffers = getOffers;

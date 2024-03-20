@@ -10,4 +10,5 @@ const multer_1 = __importDefault(require("multer"));
 const router = express_1.default.Router();
 const upload = (0, multer_1.default)({ storage: multer_1.default.memoryStorage() });
 router.post('/create', authUser_1.verifyUserToken, upload.any(), casesController_1.makeNewCase);
+router.get('/get', authUser_1.verifyUserToken, casesController_1.getCases);
 exports.default = router;

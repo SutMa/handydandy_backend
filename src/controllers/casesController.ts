@@ -54,13 +54,43 @@ const makeNewCase = async (req: Request, res: Response) => {
             await newCase.save();
         }
 
-        res.status(201).json({ message: "Case created successfully", case: newCase });
+        await User.updateOne(
+            {_id: userId},
+            {$push: {cases: newCase._id}}
+        )
+
+        return res.status(201).json({newCase});
     } catch (e) {
         console.error(e);
-        res.status(500).json({ error: "Internal Server Error" });
+        return res.status(500).json({ error: "Internal Server Error" });
     }
 };
 
+const getCases = async (req: Request, res: Response) => {
+    try{
+        const userId = req.user?.ID;
+        if (!userId) {
+            return res.status(400).json({erro: "User ID not found"})
+        }
+        const user = await User.findById(userId).exec()
+        if(!user) {
+            return res.status(400).json({error: "User not found"})
+        }
+    
+        const casesToFind = await user.cases
+        const cases = await Case.find({_id: {$in: casesToFind}}).exec()
+        return res.status(200).json(cases)
+    }catch(e){
+        console.log(e)
+        return res.status(500).json({error: "Internal server error"})
+    }
+}
+
+const acceptOffer  = async (req: Request, res: Response) => {
+    const userId = req.user?.ID
+
+}
+
+export {makeNewCase, getCases, acceptOffer}
 
 
-export {makeNewCase}

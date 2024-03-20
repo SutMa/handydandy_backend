@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.makeNewCase = void 0;
+exports.acceptOffer = exports.getCases = exports.makeNewCase = void 0;
 const users_1 = __importDefault(require("../models/users"));
 const cases_1 = __importDefault(require("../models/cases"));
 const googleCloudStorage_1 = require("../services/googleCloudStorage");
@@ -42,11 +42,36 @@ const makeNewCase = async (req, res) => {
             newCase.images = imageUrls;
             await newCase.save();
         }
-        res.status(201).json({ message: "Case created successfully", case: newCase });
+        await users_1.default.updateOne({ _id: userId }, { $push: { cases: newCase._id } });
+        return res.status(201).json({ newCase });
     }
     catch (e) {
         console.error(e);
-        res.status(500).json({ error: "Internal Server Error" });
+        return res.status(500).json({ error: "Internal Server Error" });
     }
 };
 exports.makeNewCase = makeNewCase;
+const getCases = async (req, res) => {
+    try {
+        const userId = req.user?.ID;
+        if (!userId) {
+            return res.status(400).json({ erro: "User ID not found" });
+        }
+        const user = await users_1.default.findById(userId).exec();
+        if (!user) {
+            return res.status(400).json({ error: "User not found" });
+        }
+        const casesToFind = await user.cases;
+        const cases = await cases_1.default.find({ _id: { $in: casesToFind } }).exec();
+        return res.status(200).json(cases);
+    }
+    catch (e) {
+        console.log(e);
+        return res.status(500).json({ error: "Internal server error" });
+    }
+};
+exports.getCases = getCases;
+const acceptOffer = async (req, res) => {
+    const userId = req.user?.ID;
+};
+exports.acceptOffer = acceptOffer;
