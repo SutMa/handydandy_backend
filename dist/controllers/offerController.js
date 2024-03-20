@@ -42,6 +42,7 @@ const makeOffer = async (req, res) => {
             summary: req.body.summary,
         });
         await newOffer.save();
+        tradesman.casesInvolved.push(caseForOffer._id);
         return res.status(201).json(newOffer);
     }
     catch (e) {
@@ -50,3 +51,5 @@ const makeOffer = async (req, res) => {
     }
 };
 exports.makeOffer = makeOffer;
+const deleteOffer = async (req, res) => {
+};

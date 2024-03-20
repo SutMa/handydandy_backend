@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import mongoose from 'mongoose';
+import {Types} from 'mongoose'
 import Offer from "../models/offers";
 import Case from '../models/cases';
 import Tradesman from "../models/tradesman";
@@ -47,8 +48,8 @@ const makeOffer = async (req: Request, res: Response) => {
             summary: req.body.summary,
         });
         
-        await newOffer.save();
-        tradesman.casesInvolved.push(caseForOffer._id)
+        await newOffer.save()
+        tradesman.offersPlaced.push()
 
         return res.status(201).json(newOffer);
     } catch (e) {
@@ -61,10 +62,7 @@ const makeOffer = async (req: Request, res: Response) => {
 
 const deleteOffer = async (req: Request, res: Response) => {
 
-    const tradesmanId = req.user?.ID
-    if (!tradesmanId) {
-        return res.status(401).json({ error: "Did not find tradesmanId" });
-    }
+    
 
     
 }
