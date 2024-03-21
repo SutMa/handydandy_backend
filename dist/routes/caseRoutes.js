@@ -7,8 +7,13 @@ const express_1 = __importDefault(require("express"));
 const casesController_1 = require("../controllers/casesController");
 const authUser_1 = require("../middleware/authUser");
 const multer_1 = __importDefault(require("multer"));
+const authTradesman_1 = require("../middleware/authTradesman");
+const casesController_2 = require("../controllers/casesController");
 const router = express_1.default.Router();
 const upload = (0, multer_1.default)({ storage: multer_1.default.memoryStorage() });
+//user routes
 router.post('/create', authUser_1.verifyUserToken, upload.any(), casesController_1.makeNewCase);
 router.get('/get', authUser_1.verifyUserToken, casesController_1.getCases);
+//tradesman routes
+router.get('/see', authTradesman_1.verifyTradesmanToken, casesController_2.seeCases);
 exports.default = router;

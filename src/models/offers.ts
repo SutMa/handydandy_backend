@@ -10,6 +10,8 @@ interface IOffer {
     summary: string
 }
 
+type AvailableTrade = 'Electrician' | 'Plumber' | 'Carpenting' | 'Painting' | 'Auto Mechanic' | 'Roofing' | 'Glass';
+const availableTrades: AvailableTrade[] = ['Electrician', 'Plumber', 'Carpenting', 'Painting', 'Auto Mechanic', 'Roofing', 'Glass'];
 
 interface ITimeSlot {
     startTime: Date;
@@ -51,7 +53,7 @@ const offerSchema = new Schema({
     summary: {
         type: String,
         required: true,
-    }
+    },
 }, { timestamps: true });
 
 const Offer = mongoose.model<IOffer>('Offer', offerSchema);

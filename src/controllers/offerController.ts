@@ -6,6 +6,7 @@ import Case from '../models/cases';
 import Tradesman from "../models/tradesman";
 import { timeValidation } from "../helpers/timeValidation";
 
+//tradesman makes an offer
 const makeOffer = async (req: Request, res: Response) => {
     try {
         const tradesmanId = req.user?.ID;
@@ -28,7 +29,6 @@ const makeOffer = async (req: Request, res: Response) => {
             return res.status(401).json({ error: "Tradesman not found" });
         }
 
-        
         const timeComing = req.body.timeComing
         if(!timeComing){
             return res.status(401).json({ error: "Time coming field is not found"})
@@ -38,7 +38,7 @@ const makeOffer = async (req: Request, res: Response) => {
             return res.status(401).json({error: "Time is not valid for this case"})
        }
 
-        
+   
         const newOffer = new Offer({
             tradesmanId: tradesman._id,
             userId: caseForOffer.userId,
@@ -62,6 +62,7 @@ const makeOffer = async (req: Request, res: Response) => {
     }
 };
 
+//tradesman get the offers they posted
 const getOffers = async (req: Request, res: Response) => {
     try{
         const tradesmanId = req.user?.ID
@@ -76,11 +77,21 @@ const getOffers = async (req: Request, res: Response) => {
 
         const offersToFind = await tradesman.offersPlaced
         console.log(offersToFind)
-        const offers = await Case.find({_id: {$in: offersToFind}}).exec()
+        const offers = await Offer.find({_id: {$in: offersToFind}}).exec()
         return res.status(200).json(offers)
     }catch(e){
         return res.status(500).json({error: "Internal server errror"})
     }
 }
 
-export { makeOffer, getOffers };
+/**Offer Controller for user access */
+
+//user see offers based on the caseId
+const seeOffers = async (req: Request, res: Response) => {
+
+}
+
+
+export { makeOffer, getOffers, seeOffers};
+
+

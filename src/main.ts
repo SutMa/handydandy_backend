@@ -5,13 +5,7 @@ const path = require('path')
 const PORT = 3000;
 const app = express();
 
-//models
-import User from './models/users';
-import Tradesman from './models/tradesman';
-import Case from './models/cases'
-import Offer from './models/offers'
-import Chat from './models/chat'
-import bodyParser from 'body-parser';
+
 
 // use middleware
 app.use(express.json())

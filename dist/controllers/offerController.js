@@ -8,6 +8,7 @@ const offers_1 = __importDefault(require("../models/offers"));
 const cases_1 = __importDefault(require("../models/cases"));
 const tradesman_1 = __importDefault(require("../models/tradesman"));
 const timeValidation_1 = require("../helpers/timeValidation");
+//tradesman makes an offer
 const makeOffer = async (req, res) => {
     try {
         const tradesmanId = req.user?.ID;
@@ -51,6 +52,7 @@ const makeOffer = async (req, res) => {
     }
 };
 exports.makeOffer = makeOffer;
+//tradesman see the offers they posted
 const getOffers = async (req, res) => {
     try {
         const tradesmanId = req.user?.ID;
@@ -62,7 +64,8 @@ const getOffers = async (req, res) => {
             return res.status(400).json({ error: "Tradesman not found" });
         }
         const offersToFind = await tradesman.offersPlaced;
-        const offers = await cases_1.default.find({ _id: { $in: offersToFind } }).exec();
+        console.log(offersToFind);
+        const offers = await offers_1.default.find({ _id: { $in: offersToFind } }).exec();
         return res.status(200).json(offers);
     }
     catch (e) {

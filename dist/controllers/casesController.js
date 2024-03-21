@@ -3,11 +3,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.acceptOffer = exports.getCases = exports.makeNewCase = void 0;
+exports.seeCases = exports.acceptOffer = exports.getCases = exports.makeNewCase = void 0;
 const users_1 = __importDefault(require("../models/users"));
 const cases_1 = __importDefault(require("../models/cases"));
 const googleCloudStorage_1 = require("../services/googleCloudStorage");
+const tradesman_1 = __importDefault(require("../models/tradesman"));
 require('dotenv').config();
+//user makes a case
 const makeNewCase = async (req, res) => {
     try {
         const userId = req.user?.ID;
@@ -33,6 +35,7 @@ const makeNewCase = async (req, res) => {
             summary: summary,
             address: user.address,
             zipcode: user.zipcode,
+            caseType: req.body.caseType
         });
         await newCase.save();
         if (req.files && Array.isArray(req.files) && req.files.length <= 10) {
@@ -51,11 +54,12 @@ const makeNewCase = async (req, res) => {
     }
 };
 exports.makeNewCase = makeNewCase;
+//user get the cases they posted
 const getCases = async (req, res) => {
     try {
         const userId = req.user?.ID;
         if (!userId) {
-            return res.status(400).json({ erro: "User ID not found" });
+            return res.status(400).json({ error: "User ID not found" });
         }
         const user = await users_1.default.findById(userId).exec();
         if (!user) {
@@ -71,7 +75,39 @@ const getCases = async (req, res) => {
     }
 };
 exports.getCases = getCases;
+//users see the offers based on their caseId
+const seeOffers = async (req, res) => {
+};
+//user accepts an offer 
 const acceptOffer = async (req, res) => {
     const userId = req.user?.ID;
 };
 exports.acceptOffer = acceptOffer;
+//*Cases controller for tradesman access*/
+//tradesman see all the cases user post for his trade and zipcode 
+const seeCases = async (req, res) => {
+    try {
+        const tradesmanId = req.user?.ID;
+        if (!tradesmanId) {
+            return res.status(400).json({ error: "Trademans Id not found" });
+        }
+        const tradesman = await tradesman_1.default.findById(tradesmanId);
+        if (!tradesman) {
+            return res.status(400).json({ error: "Tradesman not found" });
+        }
+        const serviceArea = await tradesman.serviceArea;
+        const serviceType = await tradesman.tradeOccupation;
+        const cases = await cases_1.default.find({
+            $and: [
+                { zipcode: { $in: serviceArea } },
+                { caseType: serviceType }
+            ]
+        }).exec();
+        console.log(cases);
+        return res.status(200).json({ cases });
+    }
+    catch (e) {
+        return res.status(500).json({ error: "Internal server error" });
+    }
+};
+exports.seeCases = seeCases;

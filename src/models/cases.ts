@@ -1,5 +1,8 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
+type AvailableTrade = 'Electrician' | 'Plumber' | 'Carpenting' | 'Painting' | 'Auto Mechanic' | 'Roofing' | 'Glass';
+const availableTrades: AvailableTrade[] = ['Electrician', 'Plumber', 'Carpenting', 'Painting', 'Auto Mechanic', 'Roofing', 'Glass'];
+
 interface ICases extends Document {
     status: string;
     timeAvailable: ITimeSlot[];
@@ -11,6 +14,7 @@ interface ICases extends Document {
     zipcode: number;
     images: string[];
     summary: string;
+    caseType: AvailableTrade;
 }
 
 interface ITimeSlot {
@@ -66,6 +70,11 @@ const caseSchema = new Schema({
     summary: {
         type: String,
         required: true,
+    },
+    caseType: {
+        type: String, 
+        required: true,
+        enum: availableTrades, 
     }
 }, { timestamps: true });
 
