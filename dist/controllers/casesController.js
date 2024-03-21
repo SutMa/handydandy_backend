@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.seeCases = exports.acceptOffer = exports.getCases = exports.makeNewCase = void 0;
 const users_1 = __importDefault(require("../models/users"));
 const cases_1 = __importDefault(require("../models/cases"));
+const offers_1 = __importDefault(require("../models/offers"));
 const googleCloudStorage_1 = require("../services/googleCloudStorage");
 const tradesman_1 = __importDefault(require("../models/tradesman"));
 require('dotenv').config();
@@ -35,7 +36,7 @@ const makeNewCase = async (req, res) => {
             summary: summary,
             address: user.address,
             zipcode: user.zipcode,
-            caseType: req.body.caseType
+            caseType: req.body.caseType,
         });
         await newCase.save();
         if (req.files && Array.isArray(req.files) && req.files.length <= 10) {
@@ -75,12 +76,51 @@ const getCases = async (req, res) => {
     }
 };
 exports.getCases = getCases;
-//users see the offers based on their caseId
-const seeOffers = async (req, res) => {
-};
-//user accepts an offer 
+//user accepts an offer based on offerId
 const acceptOffer = async (req, res) => {
-    const userId = req.user?.ID;
+    try {
+        const userId = req.user?.ID;
+        const offerId = req.body.offerId;
+        if (!offerId) {
+            return res.status(404).json({ error: "offerId not found" });
+        }
+        const offer = await offers_1.default.findById(offerId);
+        if (!offer) {
+            return res.status(404).json({ error: "Offer nor found" });
+        }
+        const caseId = offer?.caseId;
+        if (!caseId) {
+            return res.status(404).json({ error: "Case does not exist" });
+        }
+        const caseToUpdate = await cases_1.default.findById(caseId);
+        if (!caseToUpdate) {
+            return res.status(404).json({ error: "No case found" });
+        }
+        const tradesmanId = offer.tradesmanId;
+        if (!tradesmanId) {
+            return res.status(404).json({ error: "No tradesmanid in the offer" });
+        }
+        const tradesman = await tradesman_1.default.findById(tradesmanId);
+        if (!tradesman) {
+            return res.status(404).json({ error: "Tradesamn not found" });
+        }
+        //check to see if case already has accepted offer
+        if (offer.accepted == true) {
+            return res.status(400).json({ error: "Case already has accepted offer" });
+        }
+        offer.accepted = true;
+        await offer.save();
+        caseToUpdate.acceptedOffer = offer._id;
+        caseToUpdate.status = "Posted";
+        await caseToUpdate.save();
+        tradesman.casesInvolved.push(caseToUpdate._id);
+        await tradesman.save();
+        return res.status(200).json(caseToUpdate);
+    }
+    catch (e) {
+        console.log(e);
+        return res.status(500).json({ erro: "Internal Server error" });
+    }
 };
 exports.acceptOffer = acceptOffer;
 //*Cases controller for tradesman access*/
@@ -100,11 +140,11 @@ const seeCases = async (req, res) => {
         const cases = await cases_1.default.find({
             $and: [
                 { zipcode: { $in: serviceArea } },
-                { caseType: serviceType }
+                { caseType: serviceType },
+                { status: "Posted" }
             ]
         }).exec();
-        console.log(cases);
-        return res.status(200).json({ cases });
+        return res.status(200).json(cases);
     }
     catch (e) {
         return res.status(500).json({ error: "Internal server error" });

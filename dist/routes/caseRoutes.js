@@ -14,6 +14,7 @@ const upload = (0, multer_1.default)({ storage: multer_1.default.memoryStorage()
 //user routes
 router.post('/create', authUser_1.verifyUserToken, upload.any(), casesController_1.makeNewCase);
 router.get('/get', authUser_1.verifyUserToken, casesController_1.getCases);
+router.get('/accept', authUser_1.verifyUserToken, casesController_1.acceptOffer);
 //tradesman routes
 router.get('/see', authTradesman_1.verifyTradesmanToken, casesController_2.seeCases);
 exports.default = router;

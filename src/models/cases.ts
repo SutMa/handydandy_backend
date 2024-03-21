@@ -15,6 +15,7 @@ interface ICases extends Document {
     images: string[];
     summary: string;
     caseType: AvailableTrade;
+    acceptedOffer: mongoose.Types.ObjectId;
 }
 
 interface ITimeSlot {
@@ -75,6 +76,10 @@ const caseSchema = new Schema({
         type: String, 
         required: true,
         enum: availableTrades, 
+    },
+    acceptedOffer: {
+        type: Schema.Types.ObjectId,
+        ref: "Offer",
     }
 }, { timestamps: true });
 

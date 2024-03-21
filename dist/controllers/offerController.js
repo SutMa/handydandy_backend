@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getOffers = exports.makeOffer = void 0;
+exports.seeOffers = exports.getOffers = exports.makeOffer = void 0;
 const offers_1 = __importDefault(require("../models/offers"));
 const cases_1 = __importDefault(require("../models/cases"));
 const tradesman_1 = __importDefault(require("../models/tradesman"));
@@ -52,7 +52,7 @@ const makeOffer = async (req, res) => {
     }
 };
 exports.makeOffer = makeOffer;
-//tradesman see the offers they posted
+//tradesman get the offers they posted
 const getOffers = async (req, res) => {
     try {
         const tradesmanId = req.user?.ID;
@@ -73,3 +73,27 @@ const getOffers = async (req, res) => {
     }
 };
 exports.getOffers = getOffers;
+/**Offer Controller for user access */
+//user see offers based on the caseId
+const seeOffers = async (req, res) => {
+    try {
+        const userId = req.user?.ID;
+        if (!userId) {
+            return res.status(404).json({ error: "UserId not valid" });
+        }
+        const caseId = req.body.caseId;
+        if (!userId) {
+            return res.status(404).json({ error: "CaseId not valid" });
+        }
+        const offers = await offers_1.default.find({ caseId: caseId });
+        if (!offers) {
+            return res.status(404).json({ error: "Offers not found" });
+        }
+        return res.status(200).json(offers);
+    }
+    catch (e) {
+        console.log(e);
+        return res.status(500).json({ error: "Internal Server Error" });
+    }
+};
+exports.seeOffers = seeOffers;

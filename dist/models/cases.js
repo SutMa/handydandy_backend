@@ -77,6 +77,10 @@ const caseSchema = new mongoose_1.Schema({
         type: String,
         required: true,
         enum: availableTrades,
+    },
+    acceptedOffer: {
+        type: mongoose_1.Schema.Types.ObjectId,
+        ref: "Offer",
     }
 }, { timestamps: true });
 const Case = mongoose_1.default.model('Case', caseSchema);
