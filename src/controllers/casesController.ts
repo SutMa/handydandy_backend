@@ -123,12 +123,12 @@ const acceptOffer  = async (req: Request, res: Response) => {
         if (offer.accepted == true){
             return res.status(400).json({error: "Case already has accepted offer"})
         }
-        
+
         offer.accepted = true
         await offer.save()
 
         caseToUpdate.acceptedOffer = offer._id
-        caseToUpdate.status = "Posted"
+        caseToUpdate.status = "Pending"
         await caseToUpdate.save()
 
         tradesman.casesInvolved.push(caseToUpdate._id)
@@ -172,4 +172,33 @@ const seeCases = async (req: Request, res: Response) => {
 }
 
 
-export {makeNewCase, getCases, acceptOffer, seeCases}
+//tradesman can mark the case as done based on the case id
+const markCaseDone = async (req: Request, res: Response) => {
+    try{
+        const tradesmanId = req.user?.ID
+        if(!tradesmanId){
+            return res.status(404).json({error: "trademanId not found"})
+        }
+
+        const caseId = req.body.caseId
+        const currentCase = await Case.findById(caseId)
+        if (!currentCase){
+            return res.status(404).json({error: "Case does not exist"})
+        }
+
+        if (currentCase.status !== "Done"){
+            currentCase.status = "Done"
+            await currentCase.save()
+            return res.status(200).json({message: "Case Marked Done"})
+        }else{
+            return res.status(400).json({error: "Case is already marked Done"})
+        }
+       
+    }catch(e){
+        console.log(e)
+        return res.status(500).json({error: "Internal Server Error"})
+    }
+}
+
+
+export {makeNewCase, getCases, acceptOffer, seeCases, markCaseDone}

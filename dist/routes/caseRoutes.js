@@ -17,4 +17,5 @@ router.get('/get', authUser_1.verifyUserToken, casesController_1.getCases);
 router.get('/accept', authUser_1.verifyUserToken, casesController_1.acceptOffer);
 //tradesman routes
 router.get('/see', authTradesman_1.verifyTradesmanToken, casesController_2.seeCases);
+router.put('/done', authTradesman_1.verifyTradesmanToken, casesController_1.markCaseDone);
 exports.default = router;

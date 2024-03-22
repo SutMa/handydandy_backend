@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.seeCases = exports.acceptOffer = exports.getCases = exports.makeNewCase = void 0;
+exports.markCaseDone = exports.seeCases = exports.acceptOffer = exports.getCases = exports.makeNewCase = void 0;
 const users_1 = __importDefault(require("../models/users"));
 const cases_1 = __importDefault(require("../models/cases"));
 const offers_1 = __importDefault(require("../models/offers"));
@@ -111,7 +111,7 @@ const acceptOffer = async (req, res) => {
         offer.accepted = true;
         await offer.save();
         caseToUpdate.acceptedOffer = offer._id;
-        caseToUpdate.status = "Posted";
+        caseToUpdate.status = "Pending";
         await caseToUpdate.save();
         tradesman.casesInvolved.push(caseToUpdate._id);
         await tradesman.save();
@@ -151,3 +151,30 @@ const seeCases = async (req, res) => {
     }
 };
 exports.seeCases = seeCases;
+//tradesman can mark the case as done based on the case id
+const markCaseDone = async (req, res) => {
+    try {
+        const tradesmanId = req.user?.ID;
+        if (!tradesmanId) {
+            return res.status(404).json({ error: "trademanId not found" });
+        }
+        const caseId = req.body.caseId;
+        const currentCase = await cases_1.default.findById(caseId);
+        if (!currentCase) {
+            return res.status(404).json({ error: "Case does not exist" });
+        }
+        if (currentCase.status !== "Done") {
+            currentCase.status = "Done";
+            await currentCase.save();
+            return res.status(200).json({ message: "Case Marked Done" });
+        }
+        else {
+            return res.status(400).json({ error: "Case is already marked Done" });
+        }
+    }
+    catch (e) {
+        console.log(e);
+        return res.status(500).json({ error: "Internal Server Error" });
+    }
+};
+exports.markCaseDone = markCaseDone;

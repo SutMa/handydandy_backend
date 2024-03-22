@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { acceptOffer, getCases, makeNewCase } from '../controllers/casesController';
+import { acceptOffer, getCases, makeNewCase, markCaseDone } from '../controllers/casesController';
 import { verifyUserToken } from '../middleware/authUser';
 import multer from 'multer';
 import { verifyTradesmanToken } from '../middleware/authTradesman';
@@ -14,4 +14,5 @@ router.get('/accept',verifyUserToken, acceptOffer)
 
 //tradesman routes
 router.get('/see', verifyTradesmanToken, seeCases)
+router.put('/done',verifyTradesmanToken, markCaseDone)
 export default router
