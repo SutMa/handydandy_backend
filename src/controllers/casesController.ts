@@ -189,16 +189,27 @@ const markCaseDone = async (req: Request, res: Response) => {
         if (currentCase.status !== "Done"){
             currentCase.status = "Done"
             await currentCase.save()
-            return res.status(200).json({message: "Case Marked Done"})
         }else{
             return res.status(400).json({error: "Case is already marked Done"})
         }
+
+        //remove any reference of case in other documents
+        const tradesman = await Tradesman.findById(tradesmanId)
+        const offer = await Offer.findOne({caseId: caseId})
+        if(!offer){
+            return res 
+        }
+        await offer.caseId = 
+
+
+
        
     }catch(e){
         console.log(e)
         return res.status(500).json({error: "Internal Server Error"})
     }
 }
+
 
 
 export {makeNewCase, getCases, acceptOffer, seeCases, markCaseDone}
