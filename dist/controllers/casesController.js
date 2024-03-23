@@ -115,6 +115,8 @@ const acceptOffer = async (req, res) => {
         await caseToUpdate.save();
         tradesman.casesInvolved.push(caseToUpdate._id);
         await tradesman.save();
+        await offers_1.default.deleteMany({ caseId: caseId, accepted: { $ne: true } });
+        await tradesman.updateOne({ $pull: { offersPlaced: offerId } });
         return res.status(200).json(caseToUpdate);
     }
     catch (e) {
@@ -151,7 +153,8 @@ const seeCases = async (req, res) => {
     }
 };
 exports.seeCases = seeCases;
-//tradesman can mark the case as done based on the case id
+//tradesman can mark the case as done based on the case id. 
+//does not delete case itself for viewing history porposes. 
 const markCaseDone = async (req, res) => {
     try {
         const tradesmanId = req.user?.ID;
@@ -166,11 +169,30 @@ const markCaseDone = async (req, res) => {
         if (currentCase.status !== "Done") {
             currentCase.status = "Done";
             await currentCase.save();
-            return res.status(200).json({ message: "Case Marked Done" });
         }
         else {
             return res.status(400).json({ error: "Case is already marked Done" });
         }
+        //remove any reference of case in other documents
+        const tradesman = await tradesman_1.default.findById(tradesmanId);
+        if (!tradesman) {
+            return res.status(400).json({ error: "Tradesman not found" });
+        }
+        const offer = await offers_1.default.findOne({ caseId: caseId });
+        if (!offer) {
+            return res;
+        }
+        await tradesman_1.default.updateOne({ _id: tradesmanId }, {
+            $pull: {
+                casesInvolved: caseId,
+                offersPlaced: offer._id
+            }
+        });
+        const userId = currentCase.userId;
+        if (userId) {
+            await users_1.default.updateOne({ _id: userId }, { $pull: { cases: caseId } });
+        }
+        return res.status(200).json({ message: "Case marked as done and references removed successfully." });
     }
     catch (e) {
         console.log(e);

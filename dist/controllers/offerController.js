@@ -27,6 +27,9 @@ const makeOffer = async (req, res) => {
         if (!tradesman) {
             return res.status(401).json({ error: "Tradesman not found" });
         }
+        if (caseForOffer.acceptedOffer) {
+            return res.status(400).json({ error: "Already has offer accepted." });
+        }
         const timeComing = req.body.timeComing;
         if (!timeComing) {
             return res.status(401).json({ error: "Time coming field is not found" });

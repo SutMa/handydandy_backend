@@ -79,7 +79,7 @@ const getCases = async (req: Request, res: Response) => {
         }
         const user = await User.findById(userId).exec()
         if(!user) {
-            return res.status(400).json({error: "User not found"})
+         return res.status(400).json({error: "User not found"})
         }
     
         const casesToFind = await user.cases
@@ -133,6 +133,10 @@ const acceptOffer  = async (req: Request, res: Response) => {
 
         tradesman.casesInvolved.push(caseToUpdate._id)
         await tradesman.save()  
+        await Offer.deleteMany({ caseId: caseId, accepted: { $ne: true } });
+        await tradesman.updateOne(
+            {$pull: {offersPlaced: offerId}}
+        )
 
         return res.status(200).json(caseToUpdate)
     }catch(e){
@@ -172,7 +176,8 @@ const seeCases = async (req: Request, res: Response) => {
 }
 
 
-//tradesman can mark the case as done based on the case id
+//tradesman can mark the case as done based on the case id. 
+//does not delete case itself for viewing history porposes. 
 const markCaseDone = async (req: Request, res: Response) => {
     try{
         const tradesmanId = req.user?.ID
@@ -195,15 +200,36 @@ const markCaseDone = async (req: Request, res: Response) => {
 
         //remove any reference of case in other documents
         const tradesman = await Tradesman.findById(tradesmanId)
+        if (!tradesman){
+            return res.status(400).json({error: "Tradesman not found"})
+        }
         const offer = await Offer.findOne({caseId: caseId})
         if(!offer){
             return res 
         }
-        await offer.caseId = 
 
+        await Tradesman.updateOne(
+            { _id: tradesmanId },
+            {
+                $pull: {
+                    casesInvolved: caseId,
+                    offersPlaced: offer._id  
+                }
+            }
+        );
+        
 
+        const userId = currentCase.userId;
+        if (userId) {
+            await User.updateOne(
+                { _id: userId },
+                { $pull: { cases: caseId } }
+            );
+        }
 
-       
+        
+
+        return res.status(200).json({ message: "Case marked as done and references removed successfully." });
     }catch(e){
         console.log(e)
         return res.status(500).json({error: "Internal Server Error"})

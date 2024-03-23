@@ -12,5 +12,4 @@ router.get("/get", verifyTradesmanToken, getOffers)
 //user routes
 router.get('/see', verifyUserToken, seeOffers)
 
-
 export default router
